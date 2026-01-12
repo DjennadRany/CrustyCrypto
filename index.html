@@ -437,15 +437,17 @@ input,select{
   .legalFooter__inner{ padding: 18px 22px 20px; }
 }
 /* ===== Instagram promo block ===== */
+/* ===== Instagram promo block (V2 mobile-first) ===== */
 .instaBlock{
   position: relative;
   display: block;
   text-decoration: none;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   margin: 12px 0;
   border: 1px solid rgba(255,255,255,.12);
-  background: #000;
+  background: #0b1220;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
 }
 
 .instaBlock__bg{
@@ -462,67 +464,123 @@ input,select{
     #F56040,
     #FCAF45
   );
-  opacity: .85;
+  opacity: .78;
   transition: opacity .2s ease, transform .25s ease;
+}
+
+/* petit “glass” overlay pour lisibilité */
+.instaBlock::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(120% 120% at 20% 10%, rgba(0,0,0,.18), rgba(0,0,0,.42));
+  pointer-events:none;
+  z-index:0;
 }
 
 .instaBlock__content{
   position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    color: #fff;
-    justify-content: flex-end;
-    flex-direction: row-reverse;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  color: #fff;
 }
 
+/* logo compact sur mobile */
 .instaBlock__logo{
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 14px;
   object-fit: cover;
-  border: 1px solid rgba(255,255,255,.35);
+  border: 1px solid rgba(255,255,255,.30);
   background: #000;
-  flex: 0 0 auto;
 }
 
 .instaBlock__text{
-  flex: 1;
   min-width: 0;
 }
 
 .instaBlock__title{
   font-weight: 900;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: .2px;
+  line-height: 1.1;
 }
 
 .instaBlock__desc{
   font-size: 12px;
-  opacity: .9;
-  margin-top: 2px;
+  opacity: .92;
+  margin-top: 4px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* CTA plus “button” */
 .instaBlock__cta{
   font-weight: 900;
-  font-size: 13px;
-  padding: 8px 14px;
+  font-size: 12px;
+  padding: 9px 12px;
   border-radius: 999px;
-  background: rgba(0,0,0,.35);
+  background: rgba(0,0,0,.30);
   border: 1px solid rgba(255,255,255,.35);
   white-space: nowrap;
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
 }
 
-.instaBlock:hover .instaBlock__bg{
-  opacity: 1;
-  transform: scale(1.05);
+/* hover desktop */
+@media (hover:hover){
+  .instaBlock:hover .instaBlock__bg{
+    opacity: .92;
+    transform: scale(1.04);
+  }
+  .instaBlock:hover .instaBlock__cta{
+    background: rgba(0,0,0,.42);
+  }
 }
 
+/* Desktop: un peu plus grand + description sur 2 lignes */
 @media (min-width: 980px){
-  .instaBlock__logo{ width: 52px; height: 52px; }
-  .instaBlock__title{ font-size: 16px; }
+  .instaBlock{
+    border-radius: 18px;
+  }
+  .instaBlock__content{
+    grid-template-columns: 52px 1fr auto;
+    padding: 14px 16px;
+    gap: 14px;
+  }
+  .instaBlock__logo{
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+  }
+  .instaBlock__title{
+    font-size: 16px;
+  }
+  .instaBlock__desc{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+    max-width: 520px;
+  }
+  .instaBlock__cta{
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+/* Très petits écrans: CTA plus compact */
+@media (max-width: 360px){
+  .instaBlock__cta{
+    padding: 8px 10px;
+  }
+  .instaBlock__desc{
+    display:none; /* garde propre sur ultra small */
+  }
 }
 
   </style>

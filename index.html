@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CrustyCrypto — Crypto ScoreTotal PRO</title>
+  <link rel="icon" type="image/png" href="asset/CrystyCrypto.png" />
+  <style id="app-css">
+    :root{
+  color-scheme: dark;
+  --bg:#0b1220;
+  --panel: rgba(255,255,255,.04);
+  --panel2: rgba(255,255,255,.06);
+  --stroke: rgba(255,255,255,.10);
+  --stroke2: rgba(255,255,255,.14);
+  --text:#e8eefc;
+  --muted: rgba(232,238,252,.72);
+
+  --blue:#2d6bff;
+  --pos:#3ef08c;
+  --neg:#ff5a6a;
+
+  --accent:#ff8a3d;
+  --accent2:#6dff7a;
+
+  --r12:12px; --r14:14px; --r16:16px;
+  --gap:12px;
+
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text)}
+
+.topbar{
+  position: sticky; top:0; z-index:50;
+  background: rgba(11,18,32,.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.brand{
+  display:flex; align-items:center; gap:12px;
+  padding: 12px 14px;
+}
+
+.brand__logo{
+  width:56px; height:56px; border-radius:14px; object-fit:cover;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,.38);
+  flex:0 0 auto;
+}
+
+.brand__text{ min-width:0; flex:1; }
+.brand__row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.brand__name{ margin:0; font-size:18px; letter-spacing:.2px; }
+.brand__tagline{ margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; }
+
+.pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  font-size:12px;
+  color: var(--muted);
+}
+.pill--accent{ color: var(--text); }
+.pill__pro{ color: var(--accent2); font-weight:800; }
+
+.brand__actions{
+  display:flex; gap:10px; flex:0 0 auto;
+}
+
+.btn{
+  appearance:none; border:0;
+  padding:10px 12px;
+  border-radius:12px;
+  font-weight:800;
+  background: var(--blue);
+  color:#fff;
+  cursor:pointer;
+  box-shadow: 0 10px 24px rgba(45,107,255,.18);
+}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn--ghost{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--text);
+  box-shadow:none;
+}
+
+.status{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(45,107,255,.35);
+  background: rgba(45,107,255,.18);
+  font-size:12px; font-weight:800;
+}
+.status__dot{
+  width:8px;height:8px;border-radius:999px;
+  background: rgba(255,255,255,.35);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.08) inset;
+}
+.status__dot.live{ background: var(--pos); box-shadow: 0 0 0 3px rgba(62,240,140,.15) inset;}
+.status__dot.err{ background: var(--neg); box-shadow: 0 0 0 3px rgba(255,90,106,.15) inset;}
+.status__dot.load{ background: var(--accent); box-shadow: 0 0 0 3px rgba(255,138,61,.15) inset;}
+
+.drawer{
+  margin: 0 14px 12px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  border-radius: var(--r16);
+  overflow:hidden;
+}
+
+.drawer__summary{
+  list-style:none;
+  cursor:pointer;
+  padding: 12px 12px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  user-select:none;
+}
+.drawer__summary::-webkit-details-marker{display:none}
+
+.drawer__title{
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.drawer__hint{
+  color: var(--muted);
+  font-size:12px;
+  margin-left:auto;
+  text-align:right;
+}
+.drawer__chev{
+  opacity:.8;
+  transition: transform .18s ease;
+}
+.drawer[open] .drawer__chev{ transform: rotate(180deg); }
+
+.drawer__content{
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.card{
+  border:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  border-radius: var(--r16);
+  padding: 12px;
+}
+.card__title{ font-weight:900; margin-bottom:6px; }
+.card__text{ margin:0; color: var(--muted); font-size:12px; line-height:1.45; }
+.card__formula{ margin-top:10px; }
+.card__label{ font-size:12px; color: rgba(232,238,252,.86); font-weight:800; margin-bottom:6px; }
+code{
+  display:block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New",monospace;
+  font-size: 11px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  white-space: normal;
+  line-height: 1.35;
+}
+.card__note{ margin-top:8px; font-size:12px; color: var(--muted); }
+
+.grid{
+  margin-top: 12px;
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+}
+
+.field{
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  border-radius: var(--r14);
+  padding: 10px;
+}
+.field label{ display:block; font-size:12px; color: var(--muted); margin-bottom: 6px; }
+input,select{
+  width:100%;
+  border-radius:12px;
+  padding: 10px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(15,25,48,.92);
+  color: var(--text);
+  outline:none;
+}
+
+.filters{
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  border-radius: var(--r16);
+  padding: 12px;
+}
+.check{
+  display:flex; align-items:center; gap:10px;
+  padding: 8px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: rgba(232,238,252,.86);
+}
+.check span{ color: rgba(232,238,252,.86); }
+.check input{ transform: scale(1.15); }
+
+.miniGrid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.drawer__footer{
+  margin-top: 12px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.main{ padding: 10px 14px 26px; }
+
+.tableCard{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: var(--r16);
+  overflow:hidden;
+  background: rgba(255,255,255,.02);
+}
+
+.table{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 980px; /* horizontal scroll on mobile */
+}
+
+.table thead th{
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(12,18,34,.96);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 12px 10px;
+  font-size:12px;
+  color: rgba(232,238,252,.88);
+  text-align:left;
+  white-space: nowrap;
+}
+
+.table tbody td{
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  font-size: 13px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.table tbody tr:hover{ background: rgba(255,255,255,.03); }
+
+.col-rank{ width: 56px; }
+
+.coinCell{ display:flex; align-items:center; gap:10px; min-width: 240px; }
+.coinCell img{ width:22px; height:22px; border-radius:999px; flex:0 0 auto; }
+.coinName{ font-weight:900; line-height:1.05; }
+.coinSub{ font-size:11px; color: rgba(232,238,252,.62); margin-top:3px; }
+.sym{ opacity:.8; font-size:12px; }
+
+.pos{ color: var(--pos); font-weight:800; }
+.neg{ color: var(--neg); font-weight:800; }
+.score{ font-weight:900; }
+
+.footnote{
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ✅ Mobile: table scrolls horizontally ONLY (page scroll vertical normal) */
+.tableCard{ overflow-x:auto; -webkit-overflow-scrolling: touch; }
+
+/* Desktop polish */
+@media (min-width: 980px){
+  .brand{ padding: 14px 22px; }
+  .drawer{ margin: 0 22px 14px; }
+  .main{ padding: 10px 22px 30px; }
+  .grid{ grid-template-columns: repeat(6, minmax(0,1fr)); }
+  .brand__name{ font-size: 20px; }
+  .brand__logo{ width: 64px; height: 64px; border-radius: 16px; }
+}
+
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img class="brand__logo" src="asset/CrystyCrypto.png" alt="CrustyCrypto logo">
+    <div class="brand__text">
+      <div class="brand__row">
+        <h1 class="brand__name">CrustyCrypto</h1>
+        <span class="status" id="statusBadge">
+          <span class="status__dot" id="statusDot"></span>
+          <span class="status__txt" id="statusText">idle</span>
+        </span>
+      </div>
+      <div class="brand__tagline">
+        <span class="pill pill--accent">Crypto <b>ScoreTotal</b> <span class="pill__pro">PRO</span></span>
+        <span class="pill">Scanner pré-pump</span>
+      </div>
+    </div>
+
+    <div class="brand__actions">
+      <button class="btn" id="runBtn">Rafraîchir</button>
+      <button class="btn btn--ghost" id="pauseBtn">Pause</button>
+    </div>
+  </div>
+
+  <!-- ✅ Dépliant : fermé par défaut -->
+  <details class="drawer" id="drawer">
+    <summary class="drawer__summary">
+      <span class="drawer__title">Paramètres & formule</span>
+      <span class="drawer__hint" id="meta">—</span>
+      <span class="drawer__chev">▾</span>
+    </summary>
+
+    <div class="drawer__content">
+      <div class="card">
+        <div class="card__title">Ce que fait l’app</div>
+        <p class="card__text">
+          CrustyCrypto trie les cryptos selon un score “pré-pump” (activité/volume, momentum, volatilité)
+          et applique une pénalité si l’actif est déjà trop “overextended”.
+          Tu peux filtrer (stables, wrapped, min volume, min market cap) pour obtenir une liste plus “pump-oriented”.
+        </p>
+        <div class="card__formula">
+          <div class="card__label">Formule ScoreTotal PRO</div>
+          <code>
+            ScoreTotal PRO =
+            0.7×(Narratif+Produit+Exposure+Tokenomics+Structure)
+            + 3×Catalyst
+            + 4×PréPump
+            + Volatilité
+            + Bonus Momentum
+            − Overextension Penalty
+          </code>
+          <div class="card__note">⚠️ Narratif/Produit/Structure sont “humains” (valeurs par défaut dans le code). Le reste est calculé via proxys CoinGecko.</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label>Devise</label>
+          <select id="vs">
+            <option value="eur" selected>EUR</option>
+            <option value="usd">USD</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Base scan (top market cap)</label>
+          <input id="limit" type="number" min="20" max="250" value="120" />
+        </div>
+
+        <div class="field">
+          <label>Afficher Top N (score)</label>
+          <input id="topn" type="number" min="10" max="100" value="25" />
+        </div>
+
+        <div class="field">
+          <label>Refresh (secondes)</label>
+          <input id="refresh" type="number" min="15" max="600" value="60" />
+        </div>
+
+        <div class="field">
+          <label>Catalyst (0–5) global</label>
+          <input id="catalyst" type="number" min="0" max="5" step="1" value="2" />
+        </div>
+
+        <div class="field">
+          <label>Penalty sensibilité</label>
+          <select id="penMode">
+            <option value="low">Faible</option>
+            <option value="med" selected>Moyenne</option>
+            <option value="high">Forte</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters">
+        <label class="check">
+          <input id="noStables" type="checkbox" checked>
+          <span>Exclure stablecoins (USDT/USDC/DAI…)</span>
+        </label>
+
+        <label class="check">
+          <input id="noWrapped" type="checkbox" checked>
+          <span>Exclure “wrapped” (WETH/WBTC/WBNB…)</span>
+        </label>
+
+        <div class="miniGrid">
+          <div class="field">
+            <label>Min volume 24h (M)</label>
+            <input id="minVolM" type="number" min="0" step="10" value="50" />
+          </div>
+          <div class="field">
+            <label>Min market cap (M)</label>
+            <input id="minCapM" type="number" min="0" step="50" value="200" />
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer__footer">
+        <button class="btn btn--ghost" id="applyCloseBtn">Appliquer & fermer</button>
+      </div>
+    </div>
+  </details>
+</header>
+
+<main class="main">
+  <div class="tableCard">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th>Crypto</th>
+          <th>Prix</th>
+          <th>24h %</th>
+          <th>7j %</th>
+          <th>Vol (24h)</th>
+          <th>MCap</th>
+          <th>PréPump</th>
+          <th>Penalty</th>
+          <th>ScoreTotal PRO</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="footnote">
+    Source : CoinGecko public API. Si ça rate : augmente le refresh (ex 120s) ou baisse le “top market cap”.
+  </div>
+</main>
+
+<script id="app-js">
+  // ===========================
+// PERF + HELPERS
+// ===========================
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+const moneyFmt = (vs) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: vs.toUpperCase() });
+let _moneyFmt = moneyFmt("eur");
+
+const fmtShort = (n) => {
+  if (n == null || Number.isNaN(n)) return "—";
+  const abs = Math.abs(n);
+  if (abs >= 1e12) return (n/1e12).toFixed(2) + "T";
+  if (abs >= 1e9)  return (n/1e9).toFixed(2) + "B";
+  if (abs >= 1e6)  return (n/1e6).toFixed(2) + "M";
+  if (abs >= 1e3)  return (n/1e3).toFixed(2) + "K";
+  return n.toFixed(0);
+};
+
+const fmtPrice = (n) => (n == null || Number.isNaN(n)) ? "—" : _moneyFmt.format(n);
+
+function score01to5(x, lo, hi) {
+  if (x == null || Number.isNaN(x)) return 0;
+  const t = (x - lo) / (hi - lo);
+  return clamp(5 * t, 0, 5);
+}
+
+function overextensionPenalty(pct24, pct7d, mode="med") {
+  const m = { low: 1.15, med: 1.0, high: 0.85 }[mode] ?? 1.0;
+  let pen = 0;
+
+  if (pct24 != null) {
+    if (pct24 > 8*m)  pen += 2;
+    if (pct24 > 15*m) pen += 2;
+  }
+  if (pct7d != null) {
+    if (pct7d > 25*m) pen += 1;
+    if (pct7d > 45*m) pen += 2;
+  }
+  return clamp(pen, 0, 5);
+}
+
+// ===========================
+// SCORE PRO
+// ===========================
+function scorePro(coin, globalCatalyst, penMode) {
+  const defaults = {
+    narratif: 3,
+    produit: 3,
+    structure: 3,
+    overrides: {
+      // Exemples :
+      // "ondo-finance": { narratif: 5, produit: 4, structure: 4 },
+      // "zksync": { narratif: 4, produit: 4, structure: 3 },
+    }
+  };
+
+  const ov = defaults.overrides[coin.id] || {};
+  const Narratif  = ov.narratif  ?? defaults.narratif;
+  const Produit   = ov.produit   ?? defaults.produit;
+  const Structure = ov.structure ?? defaults.structure;
+
+  const r = coin.market_cap_rank ?? 9999;
+  const exposure = clamp(5 - Math.log10(r) * 2.2, 0, 5);
+
+  let tokenomics = 3;
+  if (coin.total_supply && coin.circulating_supply) {
+    const ratio = coin.circulating_supply / coin.total_supply;
+    tokenomics = score01to5(ratio, 0.15, 0.85);
+  }
+
+  const Catalyst = clamp(Number(globalCatalyst) || 0, 0, 5);
+
+  const price = coin.current_price ?? 0;
+  const range = (coin.high_24h != null && coin.low_24h != null && price)
+    ? (coin.high_24h - coin.low_24h) / price
+    : 0;
+  const Volatilite = score01to5(range, 0.01, 0.12);
+
+  const pct24 = coin.price_change_percentage_24h;
+  const pct7d = coin.price_change_percentage_7d_in_currency;
+  const momRaw = ((pct24 ?? 0) * 0.6 + (pct7d ?? 0) * 0.4);
+  const BonusMomentum = score01to5(momRaw, -5, 15);
+
+  const vol = coin.total_volume ?? 0;
+  const mcap = coin.market_cap ?? 0;
+  const volMcap = (mcap > 0) ? (vol / mcap) : 0;
+  const activity = score01to5(volMcap, 0.01, 0.25);
+  const PrePump = clamp((activity * 0.65 + BonusMomentum * 0.35), 0, 5);
+
+  const Penalty = overextensionPenalty(pct24, pct7d, penMode);
+
+  const fundamentals = 0.7 * (Narratif + Produit + exposure + tokenomics + Structure);
+  const total =
+    fundamentals +
+    3 * Catalyst +
+    4 * PrePump +
+    Volatilite +
+    BonusMomentum -
+    Penalty;
+
+  return { total: Number(total.toFixed(2)), PrePump: Number(PrePump.toFixed(2)), Penalty };
+}
+
+// ===========================
+// FILTERS
+// ===========================
+const STABLE_SYMBOLS = new Set(["usdt","usdc","dai","tusd","usdp","fdusd","usde","pyusd","eurc","busd","usdd"]);
+function isStable(coin){
+  const s = String(coin.symbol || "").toLowerCase();
+  const n = String(coin.name || "").toLowerCase();
+  return STABLE_SYMBOLS.has(s) || (n.includes("stable") && (s.includes("usd") || n.includes("usd")));
+}
+function isWrapped(coin){
+  const s = String(coin.symbol || "").toLowerCase();
+  const n = String(coin.name || "").toLowerCase();
+  if (n.includes("wrapped")) return true;
+  if (s.startsWith("w") && s.length <= 5) return true; // WETH/WBTC etc.
+  return false;
+}
+
+// ===========================
+// FETCH: no overlap + abort
+// ===========================
+let abortCtrl = null;
+let autoTimer = null;
+let autoPaused = false;
+
+async function fetchMarkets(vs, perPage) {
+  const url = new URL("https://api.coingecko.com/api/v3/coins/markets");
+  url.searchParams.set("vs_currency", vs);
+  url.searchParams.set("order", "market_cap_desc");
+  url.searchParams.set("per_page", String(perPage));
+  url.searchParams.set("page", "1");
+  url.searchParams.set("sparkline", "false");
+  url.searchParams.set("price_change_percentage", "24h,7d");
+
+  if (abortCtrl) abortCtrl.abort();
+  abortCtrl = new AbortController();
+
+  const res = await fetch(url.toString(), {
+    headers: { "accept": "application/json" },
+    signal: abortCtrl.signal
+  });
+
+  if (!res.ok) throw new Error("CoinGecko error: " + res.status);
+  return await res.json();
+}
+
+// ===========================
+// UI status
+// ===========================
+function setStatus(kind, text){
+  const dot = document.getElementById("statusDot");
+  const status = document.getElementById("statusText");
+  dot.classList.remove("live","err","load");
+  if (kind === "live") dot.classList.add("live");
+  if (kind === "error") dot.classList.add("err");
+  if (kind === "loading") dot.classList.add("load");
+  status.textContent = text;
+}
+
+// ===========================
+// Render (fast)
+// ===========================
+function render(rows) {
+  const tbody = document.getElementById("tbody");
+  const frag = document.createDocumentFragment();
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const tr = document.createElement("tr");
+
+    const ch24 = r.price_change_percentage_24h;
+    const ch7d = r.price_change_percentage_7d_in_currency;
+
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>
+        <div class="coinCell">
+          <img src="${r.image}" alt="">
+          <div>
+            <div class="coinName">${r.name} <span class="sym">(${String(r.symbol).toUpperCase()})</span></div>
+            <div class="coinSub">rank #${r.market_cap_rank ?? "—"}</div>
+          </div>
+        </div>
+      </td>
+      <td>${fmtPrice(r.current_price)}</td>
+      <td class="${(ch24 ?? 0) >= 0 ? "pos" : "neg"}">${ch24 == null ? "—" : ch24.toFixed(2) + "%"}</td>
+      <td class="${(ch7d ?? 0) >= 0 ? "pos" : "neg"}">${ch7d == null ? "—" : ch7d.toFixed(2) + "%"}</td>
+      <td>${fmtShort(r.total_volume)}</td>
+      <td>${fmtShort(r.market_cap)}</td>
+      <td>${r._score.PrePump}</td>
+      <td>${r._score.Penalty}</td>
+      <td class="score">${r._score.total}</td>
+    `;
+    frag.appendChild(tr);
+  }
+
+  tbody.replaceChildren(frag);
+}
+
+// ===========================
+// Main run
+// ===========================
+async function runOnce() {
+  const meta = document.getElementById("meta");
+  const vs = document.getElementById("vs").value;
+  const limit = clamp(Number(document.getElementById("limit").value || 120), 20, 250);
+  const topn = clamp(Number(document.getElementById("topn").value || 25), 10, 100);
+  const catalyst = clamp(Number(document.getElementById("catalyst").value || 0), 0, 5);
+  const penMode = document.getElementById("penMode").value;
+
+  const noStables = document.getElementById("noStables").checked;
+  const noWrapped = document.getElementById("noWrapped").checked;
+
+  const minVolM = Math.max(0, Number(document.getElementById("minVolM").value || 0));
+  const minCapM = Math.max(0, Number(document.getElementById("minCapM").value || 0));
+  const minVol = minVolM * 1_000_000;
+  const minCap = minCapM * 1_000_000;
+
+  _moneyFmt = moneyFmt(vs);
+
+  try {
+    setStatus("loading","loading…");
+
+    const t0 = performance.now();
+    const data = await fetchMarkets(vs, limit);
+
+    let filtered = data;
+    if (noStables) filtered = filtered.filter(c => !isStable(c));
+    if (noWrapped) filtered = filtered.filter(c => !isWrapped(c));
+    if (minVol > 0) filtered = filtered.filter(c => (c.total_volume ?? 0) >= minVol);
+    if (minCap > 0) filtered = filtered.filter(c => (c.market_cap ?? 0) >= minCap);
+
+    for (let i = 0; i < filtered.length; i++) {
+      filtered[i]._score = scorePro(filtered[i], catalyst, penMode);
+    }
+
+    filtered.sort((a,b) => b._score.total - a._score.total);
+
+    const shown = filtered.slice(0, topn);
+    render(shown);
+
+    const t1 = performance.now();
+    const now = new Date();
+    meta.textContent = `MAJ ${now.toLocaleTimeString()} · base top ${limit} · filtré ${filtered.length} · affiché ${shown.length} · ${(t1 - t0).toFixed(0)}ms`;
+
+    setStatus("live","live");
+  } catch (e) {
+    if (e.name === "AbortError") return;
+    console.error(e);
+    setStatus("error","error");
+    meta.textContent = "Erreur API (rate limit / réseau). Essaye refresh 120s ou limit plus bas.";
+  }
+}
+
+function scheduleAuto() {
+  if (autoTimer) clearTimeout(autoTimer);
+  if (autoPaused) return;
+
+  const sec = clamp(Number(document.getElementById("refresh").value || 60), 15, 600);
+  autoTimer = setTimeout(async () => {
+    await runOnce();
+    scheduleAuto();
+  }, sec * 1000);
+}
+
+// ===========================
+// UX: drawer fermé au load, bouton appliquer+fermer
+// ===========================
+const drawer = document.getElementById("drawer");
+// S'assurer que le drawer est fermé au chargement
+if (drawer) {
+  drawer.removeAttribute('open');
+}
+
+document.getElementById("applyCloseBtn").addEventListener("click", async () => {
+  await runOnce();
+  scheduleAuto();
+  drawer.open = false;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// Buttons
+document.getElementById("runBtn").addEventListener("click", async () => {
+  await runOnce();
+  scheduleAuto();
+});
+
+document.getElementById("pauseBtn").addEventListener("click", () => {
+  autoPaused = !autoPaused;
+  document.getElementById("pauseBtn").textContent = autoPaused ? "Reprendre" : "Pause";
+  if (!autoPaused) scheduleAuto();
+  else if (autoTimer) clearTimeout(autoTimer);
+});
+
+// Auto start
+runOnce().then(scheduleAuto);
+
+</script>
+</body>
+</html>

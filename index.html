@@ -436,6 +436,94 @@ input,select{
 @media (min-width: 980px){
   .legalFooter__inner{ padding: 18px 22px 20px; }
 }
+/* ===== Instagram promo block ===== */
+.instaBlock{
+  position: relative;
+  display: block;
+  text-decoration: none;
+  border-radius: 18px;
+  overflow: hidden;
+  margin: 12px 0;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #000;
+}
+
+.instaBlock__bg{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #405DE6,
+    #5851DB,
+    #833AB4,
+    #C13584,
+    #E1306C,
+    #FD1D1D,
+    #F56040,
+    #FCAF45
+  );
+  opacity: .85;
+  transition: opacity .2s ease, transform .25s ease;
+}
+
+.instaBlock__content{
+  position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    color: #fff;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+}
+
+.instaBlock__logo{
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.35);
+  background: #000;
+  flex: 0 0 auto;
+}
+
+.instaBlock__text{
+  flex: 1;
+  min-width: 0;
+}
+
+.instaBlock__title{
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: .2px;
+}
+
+.instaBlock__desc{
+  font-size: 12px;
+  opacity: .9;
+  margin-top: 2px;
+}
+
+.instaBlock__cta{
+  font-weight: 900;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.35);
+  white-space: nowrap;
+}
+
+.instaBlock:hover .instaBlock__bg{
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+@media (min-width: 980px){
+  .instaBlock__logo{ width: 52px; height: 52px; }
+  .instaBlock__title{ font-size: 16px; }
+}
 
   </style>
 </head>
@@ -463,7 +551,33 @@ input,select{
       <div class="brand__tagline">
         <span class="pill pill--accent">Crypto <b>ScoreTotal</b> <span class="pill__pro">PRO</span></span>
         <span class="pill">Scanner pré-pump</span>
+        
+      
       </div>
+      <a
+          href="https://www.instagram.com/crustycrypto"
+          target="_blank"
+          rel="noopener"
+          class="instaBlock"
+          aria-label="Suivre CrustyCrypto sur Instagram"
+        >
+          <div class="instaBlock__bg"></div>
+        
+          <div class="instaBlock__content">
+            <img src="asset/CrystyCrypto.png" alt="CrustyCrypto logo" class="instaBlock__logo">
+        
+            <div class="instaBlock__text">
+              <div class="instaBlock__title">CrustyCrypto sur Instagram</div>
+              <div class="instaBlock__desc">
+                Build in public · updates · insights · roadmap
+              </div>
+            </div>
+        
+            <div class="instaBlock__cta">
+              Follow →
+            </div>
+          </div>
+        </a>
     </div>
 
     <div class="brand__actions">
@@ -491,13 +605,7 @@ input,select{
         <div class="card__formula">
           <div class="card__label">Formule ScoreTotal PRO</div>
           <code>
-            ScoreTotal PRO =
-            0.7×(Narratif+Produit+Exposure+Tokenomics+Structure)
-            + 3×Catalyst
-            + 4×PréPump
-            + Volatilité
-            + Bonus Momentum
-            − Overextension Penalty
+           NaN
           </code>
           <div class="card__note">⚠️ Narratif/Produit/Structure sont “humains” (valeurs par défaut dans le code). Le reste est calculé via proxys CoinGecko.</div>
         </div>
@@ -600,6 +708,32 @@ input,select{
         <div>
           <div class="legalFooter__title">CrustyCrypto</div>
           <div class="legalFooter__sub">Crypto ScoreTotal PRO — scanner “pré-pump”.</div>
+         <div>
+          <a
+          href="https://www.instagram.com/crustycrypto"
+          target="_blank"
+          rel="noopener"
+          class="instaBlock"
+          aria-label="Suivre CrustyCrypto sur Instagram"
+        >
+          <div class="instaBlock__bg"></div>
+        
+          <div class="instaBlock__content">
+            <img src="asset/CrystyCrypto.png" alt="CrustyCrypto logo" class="instaBlock__logo">
+        
+            <div class="instaBlock__text">
+              <div class="instaBlock__title">CrustyCrypto sur Instagram</div>
+              <div class="instaBlock__desc">
+                Build in public · updates · insights · roadmap
+              </div>
+            </div>
+        
+            <div class="instaBlock__cta">
+              Follow →
+            </div>
+          </div>
+        </a>
+         </div>
         </div>
       </div>
   

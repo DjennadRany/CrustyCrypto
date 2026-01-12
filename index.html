@@ -293,6 +293,149 @@ input,select{
   .brand__name{ font-size: 20px; }
   .brand__logo{ width: 64px; height: 64px; border-radius: 16px; }
 }
+/* ===== Footer légal + modals ===== */
+.legalFooter{
+  margin-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+}
+.legalFooter__inner{
+  padding: 16px 14px 18px;
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.legalFooter__brand{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.legalFooter__logo{
+  width: 20%; height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.12);
+}
+.legalFooter__title{ font-weight: 900; letter-spacing:.2px; }
+.legalFooter__sub{ font-size: 12px; opacity: .72; margin-top: 2px; }
+
+.legalFooter__links{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.linkBtn{
+  appearance:none;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(232,238,252,.92);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 750;
+  font-size: 12px;
+}
+.linkBtn:hover{ background: rgba(255,255,255,.08); }
+.linkBtn--warn{
+  border-color: rgba(255,138,61,.35);
+  background: rgba(255,138,61,.10);
+}
+
+.legalFooter__disclaimer{
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(232,238,252,.78);
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  padding: 10px 12px;
+  border-radius: 14px;
+}
+.legalFooter__bottom{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(232,238,252,.62);
+}
+.legalFooter__sep{ opacity:.5; }
+
+/* Modal */
+.modal{
+  position: fixed;
+  inset: 0;
+  display:none;
+  z-index: 200;
+}
+.modal.is-open{ display:block; }
+.modal__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.55);
+}
+.modal__panel{
+  position: relative;
+  width: min(720px, calc(100% - 24px));
+  margin: 10vh auto 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(12,18,34,.96);
+  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+  overflow: hidden;
+}
+.modal__head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.modal__head h3{
+  margin:0;
+  font-size: 14px;
+  letter-spacing:.2px;
+}
+.iconBtn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(232,238,252,.92);
+  width: 34px; height: 34px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.modal__body{
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(232,238,252,.86);
+  max-height: 62vh;
+  overflow: auto;
+}
+.modal__body ul{ margin: 8px 0 0 18px; }
+.modal__foot{
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  display:flex;
+  justify-content: flex-end;
+}
+.btnSmall{
+  appearance:none;
+  border: 0;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(232,238,252,.92);
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+/* Desktop spacing */
+@media (min-width: 980px){
+  .legalFooter__inner{ padding: 18px 22px 20px; }
+}
 
   </style>
 </head>
@@ -442,9 +585,138 @@ input,select{
     </table>
   </div>
 
-  <div class="footnote">
-    Source : CoinGecko public API. Si ça rate : augmente le refresh (ex 120s) ou baisse le “top market cap”.
-  </div>
+  <footer class="legalFooter">
+    <div class="legalFooter__inner">
+      <div class="legalFooter__brand">
+        <img src="asset/CrystyCrypto.png" alt="" class="legalFooter__logo">
+        <div>
+          <div class="legalFooter__title">CrustyCrypto</div>
+          <div class="legalFooter__sub">Crypto ScoreTotal PRO — scanner “pré-pump”.</div>
+        </div>
+      </div>
+  
+      <div class="legalFooter__links">
+        <button class="linkBtn" data-modal-open="modal-legal">Mentions légales</button>
+        <button class="linkBtn" data-modal-open="modal-tos">CGU</button>
+        <button class="linkBtn" data-modal-open="modal-privacy">Confidentialité (RGPD)</button>
+        <button class="linkBtn" data-modal-open="modal-cookies">Cookies</button>
+        <button class="linkBtn linkBtn--warn" data-modal-open="modal-risk">Avertissement risques</button>
+      </div>
+  
+      <div class="legalFooter__disclaimer">
+        <strong>Disclaimer :</strong> CrustyCrypto fournit des indicateurs et des classements automatisés.
+        <u>Ce n’est pas un conseil financier</u>. Les cryptos sont volatiles : tu peux perdre tout ou partie de ton capital.
+        N’investis jamais l’argent dont tu as besoin pour vivre.
+      </div>
+  
+      <div class="legalFooter__bottom">
+        <span>© <span id="year"></span> CrustyCrypto</span>
+        <span class="legalFooter__sep">•</span>
+        <span>Données : CoinGecko (proxies)</span>
+      </div>
+    </div>
+  
+    <!-- Modals -->
+    <div class="modal" id="modal-legal" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Mentions légales">
+        <div class="modal__head">
+          <h3>Mentions légales</h3>
+          <button class="iconBtn" data-modal-close aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal__body">
+          <p><b>Éditeur :</b> [Ton nom / société] — [Adresse] — [Email de contact]</p>
+          <p><b>Hébergement :</b> GitHub Pages (GitHub, Inc.).</p>
+          <p><b>Objet :</b> CrustyCrypto est une application d’analyse et de classement d’actifs crypto, à but informatif.</p>
+          <p><b>Responsabilité :</b> Les informations affichées peuvent être inexactes, incomplètes ou retardées. Tu restes seul responsable de tes décisions.</p>
+        </div>
+        <div class="modal__foot">
+          <button class="btnSmall" data-modal-close>Fermer</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="modal" id="modal-tos" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Conditions Générales d’Utilisation">
+        <div class="modal__head">
+          <h3>CGU — Conditions Générales d’Utilisation</h3>
+          <button class="iconBtn" data-modal-close aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal__body">
+          <p><b>1) Accès</b> — Le service est fourni “tel quel”. Nous pouvons modifier ou interrompre certaines fonctionnalités.</p>
+          <p><b>2) Usage</b> — Interdiction d’utiliser l’app à des fins illégales, de scraping abusif ou de contournement de limitations.</p>
+          <p><b>3) Propriété</b> — Le design, le code et la logique de scoring appartiennent à l’éditeur (sauf éléments tiers).</p>
+          <p><b>4) Données tierces</b> — Les cours/volumes proviennent de fournisseurs externes. Nous ne garantissons ni l’exactitude ni la disponibilité.</p>
+          <p><b>5) Non-conseil</b> — Aucun contenu ne constitue un conseil en investissement. Tu es responsable de tes décisions.</p>
+        </div>
+        <div class="modal__foot">
+          <button class="btnSmall" data-modal-close>Fermer</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="modal" id="modal-privacy" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Politique de confidentialité RGPD">
+        <div class="modal__head">
+          <h3>Confidentialité — RGPD</h3>
+          <button class="iconBtn" data-modal-close aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal__body">
+          <p><b>Données collectées</b> : par défaut, cette version GitHub Pages ne collecte pas d’identifiants personnels.</p>
+          <p><b>Stockage local</b> : certains réglages (devise, filtres) peuvent être stockés dans le navigateur (localStorage) pour améliorer l’expérience.</p>
+          <p><b>Cookies/traceurs</b> : aucun cookie publicitaire n’est requis. Si tu ajoutes de l’analytics, indique-le ici et propose un opt-out.</p>
+          <p><b>Tes droits</b> : accès, rectification, suppression. Contact : [Email].</p>
+          <p><b>Base légale</b> : intérêt légitime (amélioration du service) / consentement (si analytics).</p>
+        </div>
+        <div class="modal__foot">
+          <button class="btnSmall" data-modal-close>Fermer</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="modal" id="modal-cookies" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Cookies">
+        <div class="modal__head">
+          <h3>Cookies</h3>
+          <button class="iconBtn" data-modal-close aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal__body">
+          <p>Cette version n’utilise pas de cookies publicitaires.</p>
+          <p>Nous pouvons utiliser du stockage local pour mémoriser tes préférences (devise, filtres) afin d’améliorer l’UX.</p>
+          <p>Si tu ajoutes Google Analytics / autre, prévois un bandeau de consentement et un opt-out.</p>
+        </div>
+        <div class="modal__foot">
+          <button class="btnSmall" data-modal-close>Fermer</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="modal" id="modal-risk" aria-hidden="true">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Avertissement sur les risques">
+        <div class="modal__head">
+          <h3>⚠️ Avertissement — Trading & risques</h3>
+          <button class="iconBtn" data-modal-close aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal__body">
+          <ul>
+            <li>Les cryptos sont hautement volatiles : tu peux perdre tout ton capital.</li>
+            <li>N’investis jamais de l’argent que tu ne peux pas te permettre de perdre.</li>
+            <li>Le score est un indicateur automatisé : il peut être faux, en retard, ou biaisé.</li>
+            <li>Fais tes propres recherches (DYOR) et gère ton risque (taille de position, stop, etc.).</li>
+            <li>CrustyCrypto n’est pas un conseiller financier, ni un courtier.</li>
+          </ul>
+        </div>
+        <div class="modal__foot">
+          <button class="btnSmall" data-modal-close>J’ai compris</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
 </main>
 
 <script id="app-js">
@@ -745,6 +1017,58 @@ document.getElementById("pauseBtn").addEventListener("click", () => {
 });
 
 // Auto start
+// ===== Footer modals + year =====
+(() => {
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  let lastFocus = null;
+
+  function openModal(id){
+    const m = document.getElementById(id);
+    if (!m) return;
+    lastFocus = document.activeElement;
+
+    m.classList.add("is-open");
+    m.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // focus first close button if possible
+    const closeBtn = m.querySelector("[data-modal-close]");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeModal(modalEl){
+    if (!modalEl) return;
+    modalEl.classList.remove("is-open");
+    modalEl.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+  }
+
+  document.addEventListener("click", (e) => {
+    const open = e.target.closest("[data-modal-open]");
+    if (open) {
+      const id = open.getAttribute("data-modal-open");
+      openModal(id);
+      return;
+    }
+    const close = e.target.closest("[data-modal-close]");
+    if (close) {
+      const modal = close.closest(".modal");
+      closeModal(modal);
+      return;
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const opened = document.querySelector(".modal.is-open");
+    if (opened) closeModal(opened);
+  });
+})();
+
 runOnce().then(scheduleAuto);
 
 </script>

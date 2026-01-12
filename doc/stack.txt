@@ -1,0 +1,213 @@
+Stack recommandée (solide, moderne, React-friendly)
+Option A — “Best ROI” (1 codebase mobile + backend SaaS)
+Frontend mobile
+
+React Native + Expo
+
+Build iOS/Android rapidement
+
+OTA updates (EAS Update)
+
+Très bon DX
+
+Frontend web (optionnel mais recommandé)
+
+Next.js (React)
+
+Landing + dashboard web
+
+SEO + acquisition
+
+Même design system possible
+
+Auth + DB
+
+Supabase
+
+Auth (email/password + OAuth)
+
+Postgres DB
+
+Row Level Security
+
+Storage
+
+Edge Functions si besoin
+
+Paiement abonnements
+
+Mobile (App Store / Play Store) : RevenueCat (recommandé)
+
+Simplifie énormément IAP
+
+Gère reçus, statut premium, entitlements
+
+Web : Stripe
+
+Abonnement web + checkout
+
+Portail client
+
+Backend / API
+
+Next.js API routes ou Supabase Edge Functions
+
+Un petit service “proxy” pour CoinGecko (évite CORS + rate limit + cache)
+
+Hosting / Ops
+
+Vercel (Next.js)
+
+Supabase (DB/Auth)
+
+Upstash Redis (cache) ou cache Supabase/Edge
+
+✅ Très utilisé en prod
+✅ Rapide à ship
+✅ Monétisation sérieuse (IAP + Stripe)
+✅ Pas de complexité inutile
+
+Option B — “Encore plus simple” : Mobile d’abord, web minimal
+
+Expo (React Native)
+
+Supabase
+
+RevenueCat
+
+Pas de Next.js au début (juste une landing statique + lien stores)
+
+✅ Ultra focus produit
+✅ Tu lances vite
+❌ SEO et acquisition plus compliqués au départ
+
+Pourquoi je ne conseille pas “juste une page web + Stripe” pour iOS/Android
+
+Tu peux wrapper un site en app, mais :
+
+Apple n’aime pas les “webview apps” si c’est juste un site.
+
+Pour abonnement dans une app iOS, Apple préfère IAP (sinon review parfois compliquée).
+
+Et surtout : tu perds les notifs push, watchlists offline, UX native.
+
+Architecture complète (propre) – modules
+1) Applications
+apps/mobile (Expo)
+
+Écran Scanner (liste)
+
+Écran Détails coin
+
+Watchlist
+
+Alerts settings
+
+Paywall (Premium)
+
+Login/Register
+
+apps/web (Next.js)
+
+Landing marketing
+
+Dashboard web (optionnel)
+
+Pricing
+
+Checkout Stripe (web)
+
+2) Backend
+apps/api (Next.js API routes) ou supabase/functions
+
+/api/markets : proxy CoinGecko + cache
+
+/api/score : calc côté serveur (évite de leak ton algo complet si tu veux)
+
+/api/user/settings : watchlist / seuils
+
+/api/alerts : déclenchement alertes
+
+/api/webhooks : Stripe + RevenueCat webhooks
+
+3) Data / DB (Supabase Postgres)
+
+Tables typiques :
+
+profiles (user, created_at)
+
+subscriptions (provider, status, current_period_end, entitlement)
+
+watchlists (user_id, coin_id)
+
+alerts (user_id, rule_json, channel)
+
+events (tracking)
+
+Monétisation “pro” (Apple/Google + Web)
+Mobile : RevenueCat
+
+Tu définis tes offres (Starter/Pro) dans Apple/Google Console
+
+RevenueCat te donne un “entitlement” premium=true
+
+Dans l’app : si premium=false → blur / limité
+
+Web : Stripe
+
+Checkout Stripe + webhook → met à jour subscriptions dans Supabase
+
+Même logique premium=true
+
+Le meilleur setup : premium est une notion unique dans ta DB, alimentée par Stripe et RevenueCat.
+
+Stack UI (simple et cohérente)
+
+React Native Paper ou Tamagui ou NativeWind (Tailwind RN)
+
+Pour le web Next.js : Tailwind + shadcn/ui (ou simple CSS)
+
+Ton logo/charte : accent orange/vert, fond dark → ça colle parfaitement.
+
+Push Notifications / Alertes (très rentable)
+
+Tu veux un truc qui garde les users abonnés ?
+
+Alertes score > X
+
+Alertes volume spike
+
+Alertes “Penalty redescend” (re-entry)
+
+Alertes “Catalyst window” (manuel)
+
+Tech :
+
+Expo Push (simple au début)
+
+Puis FCM/APNS si besoin
+
+“Je connais PHP/Java” → alternative si tu préfères backend classique
+
+Si tu veux rester dans ton confort :
+
+Backend : Laravel (PHP) + Redis cache
+
+Auth : Laravel Sanctum
+
+DB : Postgres
+
+Mobile : Expo (React Native) consomme l’API Laravel
+
+Paiement web : Stripe
+
+IAP mobile : RevenueCat (toujours recommandé)
+
+Ça marche très bien aussi. Mais Supabase te fait gagner du temps.
+
+Conclusion (choix le plus pratique, pas bullshit)
+
+Si ton but = ship vite, clean, scalable, mobile + web + abonnement :
+✅ Expo (React Native) + Supabase + RevenueCat (+ Next.js + Stripe pour le web)
+
+C’est une stack “standard SaaS mobile” aujourd’hui.

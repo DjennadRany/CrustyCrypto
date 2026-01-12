@@ -1,0 +1,245 @@
+1) Business plan – CrustyCrypto (format simple mais solide)
+Problème
+
+Trop de bruit sur le marché crypto.
+
+Les gens veulent des signaux simples, filtrés, “actionnables”, sans passer 3h sur X/TradingView.
+
+Solution
+
+Un scanner “pré-pump” basé sur ton ScoreTotal PRO + filtres intelligents.
+
+Une UI ultra simple : “voici la liste la plus probable”, avec explications et alertes.
+
+Proposition de valeur
+
+Moins d’overtrading : pénalité overextension
+
+Plus de focus : filtre stables/wrapped/illiquidité
+
+Gain de temps : top N dynamique, watchlist, alertes
+
+2) Freemium “Top 5 flouté” : OK, mais voici mieux et plus rentable
+
+Le top 5 flouté marche, mais ça frustre vite. Tu peux faire un modèle plus “smart” :
+
+Modèle recommandé (plus rentable)
+A) Freemium “1 signal gratuit / jour”
+
+Gratuit : 1 seul pick “du jour” (ou top 1) + score + mini explication
+
+Payant : Top 25, filtres avancés, historique, alertes, watchlists
+
+➡️ Avantage : ça donne de la valeur réelle gratuite (conversion meilleure).
+
+B) Paywall progressif “découverte”
+
+Gratuit : liste visible MAIS scores masqués + tri limité (genre seulement “top volume movers”)
+
+Payant : tri par ScoreTotal PRO + détail des composantes + export
+
+➡️ Les gens voient l’app tourner, mais comprennent que “le cerveau” est premium.
+
+C) Prix plus rentable que 2.99€
+
+2.99€ c’est “cheap” mais ça te met dans une zone où il faut énormément d’abonnés.
+Je te conseille :
+
+Starter: 6.99€/mois → Top 25 + filtres + watchlist
+
+Pro: 14.99€/mois → alertes (Telegram/Discord/email), historique, backtests simples
+
+Lifetime (très rentable en lancement): 59–129€ (limité aux 200–500 premiers)
+
+D) Upsell ultra rentable : Alertes
+
+Les gens payent plus pour ne pas rater le moment.
+
+Alertes quand : Score >= X, PrePump >= 4, Penalty <= 2, volume spike, etc.
+
+Notif email/Telegram/Discord = raison de rester abonné.
+
+3) Stack simple + login + paiement (Stripe) — “facile à installer”
+
+Tu veux “simple, fonctionnel, pas prise de tête”. Voici le combo le plus clean :
+
+Option 1 (recommandée) : Next.js + Supabase + Stripe
+
+Next.js (frontend + backend)
+
+Supabase Auth (login/register en 15 min)
+
+Supabase DB (stocke users + abonnements + settings)
+
+Stripe (paiement/subscription)
+
+Vercel (déploiement facile)
+
+✅ Ultra standard
+✅ Beaucoup de templates
+✅ Très scalable
+
+Paywall : tu gardes ton HTML/JS de scanner mais tu le mets dans une page Next.js, et tu conditionnes l’affichage (blur ou non) selon l’abonnement.
+
+Option 2 : SvelteKit + Supabase + Stripe
+
+Plus léger, très rapide, mais un peu moins “mainstream”.
+
+4) “README marketing” pour landing + levée de fonds (copy/paste)
+
+Voici un README.md orienté “pitch + traction + roadmap” :
+
+# CrustyCrypto — Crypto ScoreTotal PRO
+
+CrustyCrypto est un **scanner “pré-pump”** qui classe les cryptos en temps réel grâce à un score propriétaire.
+L’objectif : **réduire le bruit**, filtrer les faux signaux, et repérer plus vite les opportunités.
+
+> Slogan : **Crypto ScoreTotal PRO**  
+> Produit : **CrustyCrypto**
+
+---
+
+## 🚀 Vision
+
+La majorité des traders perdent du temps à naviguer entre X, TradingView, dashboards on-chain et watchlists.
+CrustyCrypto simplifie tout : **une liste claire**, un score lisible, et des filtres “anti pièges”.
+
+---
+
+## ❗ Problème
+
+- Trop d’actifs, trop de hype, trop d’infos non structurées
+- Les signaux arrivent souvent trop tard (“already pumped”)
+- Pas d’outil simple qui combine momentum + activité + volatilité + pénalité de sur-extension
+
+---
+
+## ✅ Solution
+
+CrustyCrypto affiche les meilleures cryptos du moment selon un score “pré-pump”, basé sur :
+- activité (volume / market cap)
+- momentum (24h + 7j)
+- volatilité (range intraday)
+- pénalité overextension (évite les entrées trop tardives)
+- + critères fondamentaux (Narratif/Produit/Structure) paramétrables
+
+---
+
+## 🧮 Formule ScoreTotal PRO
+
+ScoreTotal PRO =
+0.7×(Narratif + Produit + Exposure + Tokenomics + Structure)
++ 3×Catalyst
++ 4×PréPump
++ Volatilité
++ Bonus Momentum
+− Overextension Penalty
+
+**Notes**
+- Narratif / Produit / Structure : réglages “humains” (overrides)
+- le reste est calculé automatiquement via proxys (données CoinGecko)
+
+---
+
+## 💡 Pourquoi CrustyCrypto est différent
+
+- UI simple : “voici la liste” → action immédiate
+- Penalty anti “FOMO”
+- Filtres anti bruit : stablecoins / wrapped / illiquidité
+- Vision produit : **alertes** + **watchlists** + **historique**
+
+---
+
+## 💰 Business Model (Freemium → Pro)
+
+### Free
+- 1 “pick” gratuit par jour
+- Liste visible mais scores masqués / tri limité
+
+### Starter (6.99€/mois)
+- Top 25 complet + score
+- filtres + watchlist
+
+### Pro (14.99€/mois)
+- alertes (email/telegram/discord)
+- historique + insights
+- exports
+
+### Launch offer
+- Lifetime limité (early supporters) : 59–129€
+
+---
+
+## 📈 Roadmap
+
+### v1 (MVP)
+- Scanner live + ScoreTotal PRO + filtres
+- UI mobile-first
+
+### v2
+- Watchlist personnalisée
+- Badges BUY/WAIT/SELL selon règles
+- Export CSV
+
+### v3 (Monétisation forte)
+- Alertes (score threshold)
+- Historique & comparaison
+- Dashboard utilisateur + billing
+
+---
+
+## 🔧 Stack recommandée (pour login + abonnement)
+
+- Next.js (frontend + API)
+- Supabase Auth (login/register)
+- Stripe (abonnements)
+- Vercel (hosting)
+
+---
+
+## 🤝 Levée de fonds (pitch)
+
+CrustyCrypto est un produit “signal” orienté **conversion** :
+- besoin clair (gain de temps + simplification)
+- rétention via alertes
+- ARPU élevé via pro plan
+- possibilité de bundle B2B (communautés Discord/Telegram)
+
+Nous cherchons un support pour :
+- finaliser la v2 (watchlist + signaux)
+- intégrer Stripe + paywall + alertes
+- lancer le go-to-market (communautés + influence)
+
+---
+
+## ⚠️ Disclaimer
+CrustyCrypto fournit des indicateurs et proxys automatisés.
+Ce n’est pas un conseil en investissement.
+
+5) “Framework prêt à l’emploi” login + Stripe + paywall
+
+Oui. Si tu veux le plus simple :
+
+Template Next.js + Supabase Auth (login/register)
+
+Stripe Subscriptions
+
+Middleware “paywall” (si pas premium → blur top 25 ou masque scores)
+
+Je peux te donner une structure de repo complète type :
+
+/app
+  /login
+  /dashboard
+  /scanner
+/lib
+  supabaseClient.ts
+  stripe.ts
+/middleware.ts
+
+
+Et même un système :
+
+isPremium(user) → vrai/faux
+
+si faux : on floute + on limite à “1 pick gratuit”.

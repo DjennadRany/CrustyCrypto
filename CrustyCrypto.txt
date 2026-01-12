@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crypto ScoreTotal PRO (Live)</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body { margin: 0; background: #0b1220; color: #e8eefc; }
+    header { padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,.08); position: sticky; top: 0; background: rgba(11,18,32,.92); backdrop-filter: blur(8px); z-index: 10; }
+    h1 { font-size: 16px; margin: 0 0 8px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .pill { padding: 8px 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: rgba(255,255,255,.04); }
+    label { font-size: 12px; opacity: .9; display: block; margin-bottom: 4px; }
+    input, select { background: #0f1930; color: #e8eefc; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 8px 10px; outline: none; }
+    input[type="number"] { width: 120px; }
+    button { background: #2d6bff; color: #fff; border: 0; border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    main { padding: 14px 18px 26px; }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 12px; }
+    thead th { text-align: left; font-size: 12px; opacity: .9; padding: 12px 10px; background: rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.08); position: sticky; top: 74px; z-index: 5; }
+    tbody td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 13px; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    .sym { opacity: .8; font-size: 12px; }
+    .pos { color: #3ef08c; }
+    .neg { color: #ff5a6a; }
+    .score { font-weight: 700; }
+    .muted { opacity: .75; font-size: 12px; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: rgba(45,107,255,.18); border: 1px solid rgba(45,107,255,.35); font-size: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(6, minmax(140px, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); } thead th { top: 132px; } }
+    .tiny { font-size: 11px; opacity: .75; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>ScoreTotal PRO — Live (CoinGecko) <span class="badge" id="status">idle</span></h1>
+
+  <div class="grid">
+    <div class="pill">
+      <label>Devise</label>
+      <select id="vs">
+        <option value="eur" selected>EUR</option>
+        <option value="usd">USD</option>
+      </select>
+    </div>
+
+    <div class="pill">
+      <label>Nombre de cryptos (top market cap)</label>
+      <input id="limit" type="number" min="20" max="250" value="120" />
+      <div class="tiny">Plus haut = plus lent / + rate limit</div>
+    </div>
+
+    <div class="pill">
+      <label>Afficher Top N (par score)</label>
+      <input id="topn" type="number" min="10" max="100" value="25" />
+    </div>
+
+    <div class="pill">
+      <label>Refresh (secondes)</label>
+      <input id="refresh" type="number" min="15" max="600" value="60" />
+    </div>
+
+    <div class="pill">
+      <label>Catalyst (manuel 0–5) — appliqué à tous</label>
+      <input id="catalyst" type="number" min="0" max="5" step="1" value="2" />
+      <div class="tiny">Astuce : 4–5 si tu sais qu’un event arrive.</div>
+    </div>
+
+    <div class="pill">
+      <label>Penalty Overextension (auto) — sensibilité</label>
+      <select id="penMode">
+        <option value="low">Faible</option>
+        <option value="med" selected>Moyenne</option>
+        <option value="high">Forte</option>
+      </select>
+      <div class="tiny">Basé sur 24h% + 7j% (proxy)</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:12px;">
+    <button id="run">Lancer / Rafraîchir</button>
+    <button id="pause" class="pill" style="background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); color:#e8eefc;">
+      Pause auto-refresh
+    </button>
+    <span class="muted" id="meta"></span>
+  </div>
+
+  <div class="muted" style="margin-top:10px;">
+    ⚙️ Score PRO = 0.7×(Narratif+Produit+Exposure+Tokenomics+Structure) + 3×Catalyst + 4×PréPump + Volatilité + Momentum − Penalty
+    <br/>📌 Narratif/Produit/Structure par défaut = 3 (éditables dans le code). Tout le reste est calculé live avec proxys.
+  </div>
+</header>
+
+<main>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Crypto</th>
+        <th>Prix</th>
+        <th>24h %</th>
+        <th>7j %</th>
+        <th>Vol (24h)</th>
+        <th>MCap</th>
+        <th>PréPump (proxy)</th>
+        <th>Penalty</th>
+        <th>ScoreTotal PRO</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <p class="muted" style="margin-top:14px;">
+    Source data: CoinGecko public API. Si ça rate, augmente le refresh (ex: 120s) ou baisse “Nombre de cryptos”.
+  </p>
+</main>
+
+<script>
+  // -----------------------------
+  // Perf: formatters réutilisés
+  // -----------------------------
+  const moneyFmt = (vs) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: vs.toUpperCase() });
+  let _moneyFmt = moneyFmt("eur");
+
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+  const fmtShort = (n) => {
+    if (n == null || Number.isNaN(n)) return "—";
+    const abs = Math.abs(n);
+    if (abs >= 1e12) return (n/1e12).toFixed(2) + "T";
+    if (abs >= 1e9)  return (n/1e9).toFixed(2) + "B";
+    if (abs >= 1e6)  return (n/1e6).toFixed(2) + "M";
+    if (abs >= 1e3)  return (n/1e3).toFixed(2) + "K";
+    return n.toFixed(0);
+  };
+
+  const fmtPrice = (n) => (n == null || Number.isNaN(n)) ? "—" : _moneyFmt.format(n);
+
+  function score01to5(x, lo, hi) {
+    if (x == null || Number.isNaN(x)) return 0;
+    const t = (x - lo) / (hi - lo);
+    return clamp(5 * t, 0, 5);
+  }
+
+  function overextensionPenalty(pct24, pct7d, mode="med") {
+    const m = { low: 1.15, med: 1.0, high: 0.85 }[mode] ?? 1.0;
+    let pen = 0;
+    if (pct24 != null) {
+      if (pct24 > 8*m)  pen += 2;
+      if (pct24 > 15*m) pen += 2;
+    }
+    if (pct7d != null) {
+      if (pct7d > 25*m) pen += 1;
+      if (pct7d > 45*m) pen += 2;
+    }
+    return clamp(pen, 0, 5);
+  }
+
+  function scorePro(coin, globalCatalyst, penMode) {
+    const defaults = {
+      narratif: 3,
+      produit: 3,
+      structure: 3,
+      overrides: {
+        // Exemple:
+        // "ondo-finance": { narratif: 5, produit: 4, structure: 4 },
+      }
+    };
+
+    const ov = defaults.overrides[coin.id] || {};
+    const Narratif  = ov.narratif  ?? defaults.narratif;
+    const Produit   = ov.produit   ?? defaults.produit;
+    const Structure = ov.structure ?? defaults.structure;
+
+    const r = coin.market_cap_rank ?? 9999;
+    const exposure = clamp(5 - Math.log10(r) * 2.2, 0, 5);
+
+    let tokenomics = 3;
+    if (coin.total_supply && coin.circulating_supply) {
+      const ratio = coin.circulating_supply / coin.total_supply;
+      tokenomics = score01to5(ratio, 0.15, 0.85);
+    }
+
+    const Catalyst = clamp(Number(globalCatalyst) || 0, 0, 5);
+
+    const price = coin.current_price ?? 0;
+    const range = (coin.high_24h != null && coin.low_24h != null && price)
+      ? (coin.high_24h - coin.low_24h) / price
+      : 0;
+    const Volatilite = score01to5(range, 0.01, 0.12);
+
+    const pct24 = coin.price_change_percentage_24h;
+    const pct7d = coin.price_change_percentage_7d_in_currency;
+    const momRaw = ((pct24 ?? 0) * 0.6 + (pct7d ?? 0) * 0.4);
+    const BonusMomentum = score01to5(momRaw, -5, 15);
+
+    const vol = coin.total_volume ?? 0;
+    const mcap = coin.market_cap ?? 0;
+    const volMcap = (mcap > 0) ? (vol / mcap) : 0;
+    const activity = score01to5(volMcap, 0.01, 0.25);
+    const PrePump = clamp((activity * 0.65 + BonusMomentum * 0.35), 0, 5);
+
+    const Penalty = overextensionPenalty(pct24, pct7d, penMode);
+
+    const fundamentals = 0.7 * (Narratif + Produit + exposure + tokenomics + Structure);
+    const total =
+      fundamentals +
+      3 * Catalyst +
+      4 * PrePump +
+      Volatilite +
+      BonusMomentum -
+      Penalty;
+
+    return {
+      total: Number(total.toFixed(2)),
+      PrePump: Number(PrePump.toFixed(2)),
+      Penalty
+    };
+  }
+
+  // -----------------------------
+  // Fetch: anti-chevauchement + abort
+  // -----------------------------
+  let abortCtrl = null;
+  let autoTimer = null;
+  let autoPaused = false;
+
+  async function fetchMarkets(vs, perPage) {
+    const url = new URL("https://api.coingecko.com/api/v3/coins/markets");
+    url.searchParams.set("vs_currency", vs);
+    url.searchParams.set("order", "market_cap_desc");
+    url.searchParams.set("per_page", String(perPage));
+    url.searchParams.set("page", "1");
+    url.searchParams.set("sparkline", "false");
+    url.searchParams.set("price_change_percentage", "24h,7d");
+
+    // Annule l’ancienne requête si elle existe
+    if (abortCtrl) abortCtrl.abort();
+    abortCtrl = new AbortController();
+
+    const res = await fetch(url.toString(), {
+      headers: { "accept": "application/json" },
+      signal: abortCtrl.signal
+    });
+
+    if (!res.ok) throw new Error("CoinGecko error: " + res.status);
+    return await res.json();
+  }
+
+  // -----------------------------
+  // Render: ultra rapide (fragment + replaceChildren)
+  // -----------------------------
+  function render(rows, vs) {
+    const tbody = document.getElementById("tbody");
+    const frag = document.createDocumentFragment();
+
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      const tr = document.createElement("tr");
+
+      const ch24 = r.price_change_percentage_24h;
+      const ch7d = r.price_change_percentage_7d_in_currency;
+
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${r.image}" alt="" width="22" height="22" style="border-radius:999px;">
+            <div>
+              <div><strong>${r.name}</strong> <span class="sym">(${String(r.symbol).toUpperCase()})</span></div>
+              <div class="tiny">rank #${r.market_cap_rank ?? "—"}</div>
+            </div>
+          </div>
+        </td>
+        <td>${fmtPrice(r.current_price)}</td>
+        <td class="${(ch24 ?? 0) >= 0 ? "pos" : "neg"}">${ch24 == null ? "—" : ch24.toFixed(2) + "%"}</td>
+        <td class="${(ch7d ?? 0) >= 0 ? "pos" : "neg"}">${ch7d == null ? "—" : ch7d.toFixed(2) + "%"}</td>
+        <td>${fmtShort(r.total_volume)}</td>
+        <td>${fmtShort(r.market_cap)}</td>
+        <td>${r._score.PrePump}</td>
+        <td>${r._score.Penalty}</td>
+        <td class="score">${r._score.total}</td>
+      `;
+      frag.appendChild(tr);
+    }
+
+    tbody.replaceChildren(frag);
+  }
+
+  // -----------------------------
+  // Loop: pas de chevauchement (setTimeout après fin)
+  // -----------------------------
+  async function runOnce() {
+    const status = document.getElementById("status");
+    const meta = document.getElementById("meta");
+    const btn = document.getElementById("run");
+
+    const vs = document.getElementById("vs").value;
+    const limit = clamp(Number(document.getElementById("limit").value || 120), 20, 250);
+    const topn = clamp(Number(document.getElementById("topn").value || 25), 10, 100);
+    const catalyst = clamp(Number(document.getElementById("catalyst").value || 0), 0, 5);
+    const penMode = document.getElementById("penMode").value;
+
+    _moneyFmt = moneyFmt(vs);
+
+    try {
+      status.textContent = "loading…";
+      btn.disabled = true;
+
+      const t0 = performance.now();
+      const data = await fetchMarkets(vs, limit);
+
+      // score + tri (rapide)
+      for (let i = 0; i < data.length; i++) {
+        data[i]._score = scorePro(data[i], catalyst, penMode);
+      }
+      data.sort((a, b) => b._score.total - a._score.total);
+
+      render(data.slice(0, topn), vs);
+
+      const t1 = performance.now();
+      const now = new Date();
+      meta.textContent = `Dernière MAJ : ${now.toLocaleTimeString()} — base: top ${limit} — affiché: ${topn} — render ${(t1 - t0).toFixed(0)}ms`;
+      status.textContent = "live";
+    } catch (e) {
+      if (e.name === "AbortError") return; // normal si on a annulé
+      console.error(e);
+      status.textContent = "error";
+      meta.textContent = "Erreur API (rate limit / réseau). Augmente refresh ou baisse limit.";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function scheduleAuto() {
+    if (autoTimer) clearTimeout(autoTimer);
+    if (autoPaused) return;
+
+    const sec = clamp(Number(document.getElementById("refresh").value || 60), 15, 600);
+    autoTimer = setTimeout(async () => {
+      await runOnce();
+      scheduleAuto();
+    }, sec * 1000);
+  }
+
+  // Controls
+  document.getElementById("run").addEventListener("click", async () => {
+    await runOnce();
+    scheduleAuto();
+  });
+
+  document.getElementById("pause").addEventListener("click", () => {
+    autoPaused = !autoPaused;
+    const btn = document.getElementById("pause");
+    btn.textContent = autoPaused ? "Reprendre auto-refresh" : "Pause auto-refresh";
+    if (!autoPaused) scheduleAuto();
+    else if (autoTimer) clearTimeout(autoTimer);
+  });
+
+  // auto start
+  runOnce().then(scheduleAuto);
+</script>
+</body>
+</html>

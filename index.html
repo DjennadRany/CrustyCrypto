@@ -42,10 +42,11 @@ body{margin:0;background:var(--bg);color:var(--text)}
 .brand{
   display:flex; align-items:center; gap:12px;
   padding: 12px 14px;
+  flex-direction: column;
 }
 
 .brand__logo{
-  width:56px; height:56px; border-radius:14px; object-fit:cover;
+  width: 30%; height: auto; border-radius:14px; object-fit:cover;
   border:1px solid rgba(255,255,255,.12);
   box-shadow: 0 12px 30px rgba(0,0,0,.38);
   flex:0 0 auto;
@@ -286,12 +287,13 @@ input,select{
 
 /* Desktop polish */
 @media (min-width: 980px){
-  .brand{ padding: 14px 22px; }
+  .brand{ padding: 14px 22px;   
+    flex-direction: row; }
   .drawer{ margin: 0 22px 14px; }
   .main{ padding: 10px 22px 30px; }
   .grid{ grid-template-columns: repeat(6, minmax(0,1fr)); }
   .brand__name{ font-size: 20px; }
-  .brand__logo{ width: 64px; height: 64px; border-radius: 16px; }
+  .brand__logo{ width: 30%; height: auto; border-radius: 16px; }
 }
 /* ===== Footer légal + modals ===== */
 .legalFooter{
@@ -545,6 +547,7 @@ input,select{
 
 /* Desktop: un peu plus grand + description sur 2 lignes */
 @media (min-width: 980px){
+
   .instaBlock{
     border-radius: 18px;
   }
@@ -636,12 +639,13 @@ input,select{
             </div>
           </div>
         </a>
-    </div>
-
+        
     <div class="brand__actions">
       <button class="btn" id="runBtn">Rafraîchir</button>
       <button class="btn btn--ghost" id="pauseBtn">Pause</button>
     </div>
+    </div>
+
   </div>
 
   <!-- ✅ Dépliant : fermé par défaut -->
